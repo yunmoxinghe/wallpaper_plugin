@@ -1,6 +1,10 @@
 # Device Wallpaper Flutter Plugin
 
+[English](#device-wallpaper-flutter-plugin)
+
 一个 Flutter 插件，用于获取设备壁纸，支持 Android 上的静态和动态壁纸。
+
+## 简体中文 介绍
 
 ## 功能特性
 

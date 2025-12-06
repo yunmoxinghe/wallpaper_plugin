@@ -1,5 +1,7 @@
 # Device Wallpaper Flutter Plugin
 
+[简体中文](#简体中文-介绍)
+
 A Flutter plugin to get device wallpaper, supporting static and live wallpapers on Android.
 
 ## Features
