@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wallpaper_plugin/wallpaper_plugin.dart';
 import 'package:wallpaper_plugin/wallpaper_plugin_platform_interface.dart';
@@ -9,7 +10,7 @@ class MockWallpaperPluginPlatform
     implements WallpaperPluginPlatform {
 
   @override
-  Future<String?> getPlatformVersion() => Future.value('42');
+  Future<Uint8List?> getWallpaper() => Future.value(Uint8List.fromList([1, 2, 3, 4, 5]));
 }
 
 void main() {
@@ -19,11 +20,10 @@ void main() {
     expect(initialPlatform, isInstanceOf<MethodChannelWallpaperPlugin>());
   });
 
-  test('getPlatformVersion', () async {
-    WallpaperPlugin wallpaperPlugin = WallpaperPlugin();
+  test('getWallpaper', () async {
     MockWallpaperPluginPlatform fakePlatform = MockWallpaperPluginPlatform();
     WallpaperPluginPlatform.instance = fakePlatform;
 
-    expect(await wallpaperPlugin.getPlatformVersion(), '42');
+    expect(await WallpaperPlugin.getWallpaper(), isA<Uint8List>());
   });
 }

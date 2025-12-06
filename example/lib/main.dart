@@ -16,35 +16,27 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  final _wallpaperPlugin = WallpaperPlugin();
+  Uint8List? _wallpaper;
+  String _error = '';
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    loadWallpaper();
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
+  Future<void> loadWallpaper() async {
     try {
-      platformVersion =
-          await _wallpaperPlugin.getPlatformVersion() ?? 'Unknown platform version';
+      final bytes = await WallpaperPlugin.getWallpaper();
+      setState(() {
+        _wallpaper = bytes;
+        _error = '';
+      });
     } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      setState(() {
+        _error = 'Failed to load wallpaper.';
+      });
     }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
   }
 
   @override
@@ -52,10 +44,19 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('Wallpaper Plugin Example'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: _error.isNotEmpty
+              ? Text(_error)
+              : _wallpaper == null
+                  ? const CircularProgressIndicator()
+                  : Image.memory(_wallpaper!),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: loadWallpaper,
+          tooltip: 'Refresh Wallpaper',
+          child: const Icon(Icons.refresh),
         ),
       ),
     );

@@ -7,6 +7,7 @@
 // https://flutter.dev/to/integration-testing
 
 
+import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -15,11 +16,9 @@ import 'package:wallpaper_plugin/wallpaper_plugin.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('getPlatformVersion test', (WidgetTester tester) async {
-    final WallpaperPlugin plugin = WallpaperPlugin();
-    final String? version = await plugin.getPlatformVersion();
-    // The version string depends on the host platform running the test, so
-    // just assert that some non-empty string is returned.
-    expect(version?.isNotEmpty, true);
+  testWidgets('getWallpaper test', (WidgetTester tester) async {
+    final Uint8List? wallpaper = await WallpaperPlugin.getWallpaper();
+    // Wallpaper might be null in some cases (e.g., no wallpaper set), so just ensure no exception is thrown
+    expect(wallpaper, isA<Uint8List?>());
   });
 }

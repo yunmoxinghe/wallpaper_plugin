@@ -10,8 +10,8 @@ class MethodChannelWallpaperPlugin extends WallpaperPluginPlatform {
   final methodChannel = const MethodChannel('wallpaper_plugin');
 
   @override
-  Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
-    return version;
+  Future<Uint8List?> getWallpaper() async {
+    final bytes = await methodChannel.invokeMethod<Uint8List>('getWallpaper');
+    return bytes;
   }
 }

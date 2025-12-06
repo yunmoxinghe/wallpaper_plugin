@@ -12,7 +12,7 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
       channel,
       (MethodCall methodCall) async {
-        return '42';
+        return Uint8List.fromList([1, 2, 3, 4, 5]);
       },
     );
   });
@@ -21,7 +21,7 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
   });
 
-  test('getPlatformVersion', () async {
-    expect(await platform.getPlatformVersion(), '42');
+  test('getWallpaper', () async {
+    expect(await platform.getWallpaper(), isA<Uint8List>());
   });
 }
