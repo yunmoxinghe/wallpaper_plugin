@@ -1,6 +1,6 @@
 name: device_wallpaper_flutter
 description: "A Flutter plugin to get device wallpaper, supporting static and live wallpapers on Android."
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/yourusername/device_wallpaper_flutter
 
 environment:

@@ -1,3 +1,7 @@
+## 1.0.1
+
+* Fix version conflict issue for initial release
+
 ## 1.0.0
 
 * Major refactor: Renamed package from `wallpaper_plugin` to `device_wallpaper_flutter`

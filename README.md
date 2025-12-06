@@ -23,7 +23,7 @@ Add `device_wallpaper_flutter` to your `pubspec.yaml` file:
 dependencies:
   flutter:
     sdk: flutter
-  device_wallpaper_flutter: ^1.0.0
+  device_wallpaper_flutter: ^1.0.1
 ```
 
 Then run `flutter pub get` to install the plugin.
@@ -138,9 +138,9 @@ MIT
 
 ## Issues
 
-Please file any issues, bugs or feature requests as an issue on our [GitHub](https://github.com/yourusername/device_wallpaper_flutter) repository.
+Please file any issues, bugs or feature requests as an issue on our [GitHub](https://github.com/yunmoxinghe/wallpaper_plugin) repository.
 
 ## Author
 
-[Your Name] (https://github.com/yourusername)
+[云漠星河] (https://github.com/yunmoxinghe)
 
