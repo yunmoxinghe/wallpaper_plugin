@@ -1,19 +1,24 @@
-# device_wallpaper_flutter
+# Device Wallpaper Flutter Plugin
 
 A Flutter plugin to get device wallpaper, supporting static and live wallpapers on Android.
 
 ## Features
 
-- ✅ Get device wallpaper as Uint8List bytes
+- ✅ Get current device wallpaper as Uint8List (PNG format)
 - ✅ Support for static wallpapers
 - ✅ Support for live wallpapers (returns thumbnail)
 - ✅ Android platform support
-- ✅ Easy to use API
-- ✅ Example app included
 
-## Supported Platforms
+## Platform Support
 
-- Android
+| Platform | Status |
+|----------|--------|
+| Android  | ✅      |
+| iOS      | ❌      |
+| Web      | ❌      |
+| Linux    | ❌      |
+| macOS    | ❌      |
+| Windows  | ❌      |
 
 ## Installation
 
@@ -21,75 +26,86 @@ Add `device_wallpaper_flutter` to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter:
-    sdk: flutter
   device_wallpaper_flutter: ^1.0.1
 ```
 
-Then run `flutter pub get` to install the plugin.
+Then run:
+
+```bash
+flutter pub get
+```
 
 ## Usage
 
-### Basic Usage
+### Import the package
 
 ```dart
+import 'package:device_wallpaper_flutter/device_wallpaper_flutter.dart';
+```
+
+### Get the current wallpaper
+
+```dart
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:device_wallpaper_flutter/device_wallpaper_flutter.dart';
-import 'dart:typed_data';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class WallpaperScreen extends StatefulWidget {
+  const WallpaperScreen({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<WallpaperScreen> createState() => _WallpaperScreenState();
 }
 
-class _MyAppState extends State<MyApp> {
-  Uint8List? _wallpaper;
-  String _error = '';
+class _WallpaperScreenState extends State<WallpaperScreen> {
+  Uint8List? _wallpaperBytes;
+  bool _isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    loadWallpaper();
-  }
+  Future<void> _getWallpaper() async {
+    setState(() {
+      _isLoading = true;
+    });
 
-  Future<void> loadWallpaper() async {
     try {
-      final bytes = await DeviceWallpaperFlutter.getWallpaper();
+      final Uint8List? wallpaper = await DeviceWallpaperFlutter.getWallpaper();
       setState(() {
-        _wallpaper = bytes;
-        _error = '';
+        _wallpaperBytes = wallpaper;
       });
-    } on PlatformException {
+    } catch (e) {
+      print('Failed to get wallpaper: $e');
+    } finally {
       setState(() {
-        _error = 'Failed to load wallpaper.';
+        _isLoading = false;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Wallpaper Plugin Example'),
-        ),
-        body: Center(
-          child: _error.isNotEmpty
-              ? Text(_error)
-              : _wallpaper == null
-                  ? const CircularProgressIndicator()
-                  : Image.memory(_wallpaper!),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: loadWallpaper,
-          tooltip: 'Refresh Wallpaper',
-          child: const Icon(Icons.refresh),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Device Wallpaper'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _isLoading
+                ? const CircularProgressIndicator()
+                : _wallpaperBytes != null
+                    ? Image.memory(
+                        _wallpaperBytes!,
+                        width: 300,
+                        height: 500,
+                        fit: BoxFit.cover,
+                      )
+                    : const Text('No wallpaper available'),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _getWallpaper,
+              child: const Text('Get Wallpaper'),
+            ),
+          ],
         ),
       ),
     );
@@ -97,36 +113,40 @@ class _MyAppState extends State<MyApp> {
 }
 ```
 
-### Permission Handling
-
-On Android, you need to request permissions to access media files. For Android 13+ (`API 33+`), use `READ_MEDIA_IMAGES` permission. For older versions, use `READ_EXTERNAL_STORAGE` permission.
-
-Add the following to your `AndroidManifest.xml`:
-
-```xml
-<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
-```
-
-You can use the `permission_handler` package to request permissions at runtime.
-
 ## API Reference
 
 ### `DeviceWallpaperFlutter.getWallpaper()`
 
-Returns the device wallpaper as `Uint8List` bytes.
+Returns the current device wallpaper as a `Uint8List` in PNG format.
 
-- **Returns**: `Future<Uint8List?>` - The wallpaper bytes, or `null` if failed to get wallpaper
-- **Throws**: `PlatformException` - If there's an error getting the wallpaper
+- **Returns**: `Future<Uint8List?>` - The wallpaper bytes or `null` if failed
+- **Platforms**: Android only
+- **Behavior**:
+  - For static wallpapers: Returns the full bitmap
+  - For live wallpapers: Returns a thumbnail (API 27+)
+  - If no wallpaper is set: Returns `null`
 
-## Example App
+## Permissions
 
-The plugin includes an example app that demonstrates how to use the device_wallpaper_flutter. To run the example app:
+### Android
 
-1. Clone the repository
-2. Navigate to the `example` directory
-3. Run `flutter pub get`
-4. Run `flutter run`
+No additional permissions are required for this plugin. The necessary permissions are handled internally.
+
+## Implementation Details
+
+### Android
+
+- Uses `WallpaperManager` to access the device wallpaper
+- For live wallpapers (API 27+), tries to get a thumbnail using `getBuiltInDrawable()`
+- Falls back to the current drawable if thumbnail is not available
+- Converts drawables to PNG format bytes before returning
+
+## Limitations
+
+- Only supports Android platform
+- Live wallpaper support requires Android 8.1+ (API 27+)
+- Does not support setting wallpapers, only retrieving them
+- Does not support getting lock screen vs home screen wallpapers separately
 
 ## Contributing
 
@@ -138,9 +158,4 @@ MIT
 
 ## Issues
 
-Please file any issues, bugs or feature requests as an issue on our [GitHub](https://github.com/yunmoxinghe/wallpaper_plugin) repository.
-
-## Author
-
-[云漠星河] (https://github.com/yunmoxinghe)
-
+Please file issues, bugs, or feature requests in [GitHub Issues](https://github.com/yourusername/device_wallpaper_flutter/issues).
