@@ -158,4 +158,4 @@ MIT
 
 ## 问题反馈
 
-请在 [GitHub Issues](https://github.com/yourusername/device_wallpaper_flutter/issues) 中提交问题、错误或功能请求。
+请在 [GitHub Issues](https://github.com/yunmoxinghe/wallpaper_plugin/issues) 中提交问题、错误或功能请求。
