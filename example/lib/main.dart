@@ -3,7 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:wallpaper_plugin/wallpaper_plugin.dart';
+import 'package:device_wallpaper_flutter/device_wallpaper_flutter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
     }
     
     try {
-      final bytes = await WallpaperPlugin.getWallpaper();
+      final bytes = await DeviceWallpaperFlutter.getWallpaper();
       setState(() {
         _wallpaper = bytes;
         _error = '';
@@ -84,7 +84,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Wallpaper Plugin Example'),
+          title: const Text('Device Wallpaper Flutter Example'),
         ),
         body: Center(
           child: _error.isNotEmpty

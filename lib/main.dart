@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:wallpaper_plugin/wallpaper_plugin.dart';
+import 'package:device_wallpaper_flutter/device_wallpaper_flutter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> loadWallpaper() async {
-    final bytes = await WallpaperPlugin.getWallpaper();
+    final bytes = await DeviceWallpaperFlutter.getWallpaper();
     setState(() {
       wallpaper = bytes;
     });

@@ -11,13 +11,13 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:wallpaper_plugin/wallpaper_plugin.dart';
+import 'package:device_wallpaper_flutter/device_wallpaper_flutter.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('getWallpaper test', (WidgetTester tester) async {
-    final Uint8List? wallpaper = await WallpaperPlugin.getWallpaper();
+    final Uint8List? wallpaper = await DeviceWallpaperFlutter.getWallpaper();
     // Wallpaper might be null in some cases (e.g., no wallpaper set), so just ensure no exception is thrown
     expect(wallpaper, isA<Uint8List?>());
   });

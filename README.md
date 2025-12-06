@@ -1,4 +1,4 @@
-# wallpaper_plugin
+# device_wallpaper_flutter
 
 A Flutter plugin to get device wallpaper, supporting static and live wallpapers on Android.
 
@@ -17,13 +17,13 @@ A Flutter plugin to get device wallpaper, supporting static and live wallpapers 
 
 ## Installation
 
-Add `wallpaper_plugin` to your `pubspec.yaml` file:
+Add `device_wallpaper_flutter` to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
   flutter:
     sdk: flutter
-  wallpaper_plugin: ^0.0.1
+  device_wallpaper_flutter: ^0.0.1
 ```
 
 Then run `flutter pub get` to install the plugin.
@@ -34,7 +34,7 @@ Then run `flutter pub get` to install the plugin.
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:wallpaper_plugin/wallpaper_plugin.dart';
+import 'package:device_wallpaper_flutter/device_wallpaper_flutter.dart';
 import 'dart:typed_data';
 
 void main() {
@@ -60,7 +60,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> loadWallpaper() async {
     try {
-      final bytes = await WallpaperPlugin.getWallpaper();
+      final bytes = await DeviceWallpaperFlutter.getWallpaper();
       setState(() {
         _wallpaper = bytes;
         _error = '';
@@ -112,7 +112,7 @@ You can use the `permission_handler` package to request permissions at runtime.
 
 ## API Reference
 
-### `WallpaperPlugin.getWallpaper()`
+### `DeviceWallpaperFlutter.getWallpaper()`
 
 Returns the device wallpaper as `Uint8List` bytes.
 
@@ -121,7 +121,7 @@ Returns the device wallpaper as `Uint8List` bytes.
 
 ## Example App
 
-The plugin includes an example app that demonstrates how to use the wallpaper_plugin. To run the example app:
+The plugin includes an example app that demonstrates how to use the device_wallpaper_flutter. To run the example app:
 
 1. Clone the repository
 2. Navigate to the `example` directory
@@ -138,7 +138,7 @@ MIT
 
 ## Issues
 
-Please file any issues, bugs or feature requests as an issue on our [GitHub](https://github.com/yourusername/wallpaper_plugin) repository.
+Please file any issues, bugs or feature requests as an issue on our [GitHub](https://github.com/yourusername/device_wallpaper_flutter) repository.
 
 ## Author
 

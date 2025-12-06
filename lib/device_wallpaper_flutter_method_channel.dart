@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import 'wallpaper_plugin_platform_interface.dart';
+import 'device_wallpaper_flutter_platform_interface.dart';
 
-/// An implementation of [WallpaperPluginPlatform] that uses method channels.
-class MethodChannelWallpaperPlugin extends WallpaperPluginPlatform {
+/// An implementation of [DeviceWallpaperFlutterPlatform] that uses method channels.
+class MethodChannelDeviceWallpaperFlutter extends DeviceWallpaperFlutterPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  final methodChannel = const MethodChannel('wallpaper_plugin');
+  final methodChannel = const MethodChannel('device_wallpaper_flutter');
 
   @override
   Future<Uint8List?> getWallpaper() async {

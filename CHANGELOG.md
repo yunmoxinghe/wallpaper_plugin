@@ -1,6 +1,6 @@
 ## 0.0.1
 
-* Initial release of wallpaper_plugin
+* Initial release of device_wallpaper_flutter
 * Support for getting device wallpaper on Android
 * Support for both static and live wallpapers
 * Returns wallpaper as Uint8List bytes

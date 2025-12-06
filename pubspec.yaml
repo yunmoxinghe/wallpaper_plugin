@@ -1,7 +1,7 @@
-name: wallpaper_plugin
+name: device_wallpaper_flutter
 description: "A Flutter plugin to get device wallpaper, supporting static and live wallpapers on Android."
 version: 0.0.1
-homepage: https://github.com/yourusername/wallpaper_plugin
+homepage: https://github.com/yourusername/device_wallpaper_flutter
 
 environment:
   sdk: ^3.9.2
@@ -35,8 +35,8 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.example.wallpaper_plugin
-        pluginClass: WallpaperPlugin
+        package: com.example.device_wallpaper_flutter
+        pluginClass: DeviceWallpaperFlutter
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

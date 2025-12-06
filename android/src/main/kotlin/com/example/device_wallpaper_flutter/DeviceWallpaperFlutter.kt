@@ -1,4 +1,4 @@
-package com.example.wallpaper_plugin
+package com.example.device_wallpaper_flutter
 
 import android.app.WallpaperManager
 import android.content.Context
@@ -13,14 +13,14 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.io.ByteArrayOutputStream
 
-class WallpaperPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
+class DeviceWallpaperFlutter : FlutterPlugin, MethodChannel.MethodCallHandler {
 
     private lateinit var channel: MethodChannel
     private lateinit var context: Context
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         context = binding.applicationContext
-        channel = MethodChannel(binding.binaryMessenger, "wallpaper_plugin")
+        channel = MethodChannel(binding.binaryMessenger, "device_wallpaper_flutter")
         channel.setMethodCallHandler(this)
     }
 
