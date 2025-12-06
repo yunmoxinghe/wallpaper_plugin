@@ -1,7 +1,7 @@
 name: wallpaper_plugin
-description: "A new Flutter plugin project."
+description: "A Flutter plugin to get device wallpaper, supporting static and live wallpapers on Android."
 version: 0.0.1
-homepage:
+homepage: https://github.com/yourusername/wallpaper_plugin
 
 environment:
   sdk: ^3.9.2

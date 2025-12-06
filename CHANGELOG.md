@@ -1,3 +1,9 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Initial release of wallpaper_plugin
+* Support for getting device wallpaper on Android
+* Support for both static and live wallpapers
+* Returns wallpaper as Uint8List bytes
+* Handles permissions for accessing media files
+* Provides example app demonstrating usage
+* Compatible with Flutter 3.3.0+
