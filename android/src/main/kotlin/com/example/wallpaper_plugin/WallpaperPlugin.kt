@@ -3,8 +3,11 @@ package com.example.wallpaper_plugin
 import android.app.WallpaperManager
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.os.Build
+import androidx.annotation.RequiresApi
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -40,9 +43,12 @@ class WallpaperPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
         // 检查是否是动态壁纸
         val info = wm.wallpaperInfo
         if (info != null) {
-            val liveThumb = getLiveWallpaperThumbnail(info.packageName, info.thumbnailResource)
-            if (liveThumb != null) {
-                return bitmapToBytes(liveThumb)
+            // 对于动态壁纸，我们尝试获取缩略图
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                val liveThumb = getLiveWallpaperThumbnail(wm)
+                if (liveThumb != null) {
+                    return bitmapToBytes(liveThumb)
+                }
             }
             // 若动态壁纸没提供缩略图，则继续尝试 drawable（通常为纯色）
         }
@@ -57,17 +63,41 @@ class WallpaperPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     }
 
     // --------------------------------------
-    //         获取动态壁纸缩略图
+    //         获取动态壁纸缩略图 (API 27+)
     // --------------------------------------
-    private fun getLiveWallpaperThumbnail(packageName: String, resId: Int): Bitmap? {
-        if (resId == 0) return null
+    @RequiresApi(Build.VERSION_CODES.O_MR1)
+    private fun getLiveWallpaperThumbnail(wm: WallpaperManager): Bitmap? {
         return try {
-            val pm = context.packageManager
-            val res = pm.getResourcesForApplication(packageName)
-            BitmapFactory.decodeResource(res, resId)
+            val drawable = wm.getBuiltInDrawable()
+            if (drawable != null) {
+                drawableToBitmap(drawable)
+            } else {
+                null
+            }
         } catch (_: Exception) {
             null
         }
+    }
+
+    // --------------------------------------
+    //         Drawable → Bitmap
+    // --------------------------------------
+    private fun drawableToBitmap(drawable: Drawable): Bitmap {
+        if (drawable is BitmapDrawable) {
+            return drawable.bitmap
+        }
+
+        val bitmap = Bitmap.createBitmap(
+            drawable.intrinsicWidth,
+            drawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+
+        return bitmap
     }
 
     // --------------------------------------
