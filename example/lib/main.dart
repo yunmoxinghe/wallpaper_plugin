@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:wallpaper_plugin/wallpaper_plugin.dart';
 
 void main() {
@@ -18,23 +19,62 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Uint8List? _wallpaper;
   String _error = '';
+  bool _hasPermission = false;
 
   @override
   void initState() {
     super.initState();
-    loadWallpaper();
+    _checkPermission();
+  }
+
+  Future<void> _checkPermission() async {
+    PermissionStatus status;
+    if (await Permission.storage.isGranted || 
+        await Permission.photos.isGranted) {
+      status = PermissionStatus.granted;
+    } else {
+      status = await _requestPermission();
+    }
+    
+    setState(() {
+      _hasPermission = status.isGranted;
+    });
+    
+    if (_hasPermission) {
+      loadWallpaper();
+    }
+  }
+
+  Future<PermissionStatus> _requestPermission() async {
+    Permission permission;
+    if (await Permission.storage.shouldShowRequestRationale) {
+      permission = Permission.storage;
+    } else {
+      permission = Permission.photos;
+    }
+    return await permission.request();
   }
 
   Future<void> loadWallpaper() async {
+    if (!_hasPermission) {
+      await _checkPermission();
+      if (!_hasPermission) {
+        setState(() {
+          _error = 'Permission denied. Cannot load wallpaper.';
+        });
+        return;
+      }
+    }
+    
     try {
       final bytes = await WallpaperPlugin.getWallpaper();
       setState(() {
         _wallpaper = bytes;
         _error = '';
       });
-    } on PlatformException {
+    } on PlatformException catch (e) {
       setState(() {
-        _error = 'Failed to load wallpaper.';
+        _error = 'Failed to load wallpaper: ${e.message}';
       });
     }
   }
@@ -48,7 +88,19 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Center(
           child: _error.isNotEmpty
-              ? Text(_error)
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(_error),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        openAppSettings();
+                      },
+                      child: const Text('Open Settings'),
+                    ),
+                  ],
+                )
               : _wallpaper == null
                   ? const CircularProgressIndicator()
                   : Image.memory(_wallpaper!),
